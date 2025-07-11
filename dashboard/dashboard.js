@@ -1371,7 +1371,7 @@ async function generateDealContent() {
 \`\`\`
 Make it realistic, professional, and specifically tailored to ${dealName}'s product category. Include at least 5 items in detailedDescription, useCases, and keyBenefits. Include at least 4 eligibility criteria and 5 FAQ items. Include at least 3 items in whatsIncluded and 2 reviews.`;
 
-    const response = await fetch('http://127.0.0.1:3000/api/ai/generate', {
+    const response = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
