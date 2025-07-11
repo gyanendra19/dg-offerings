@@ -17,6 +17,7 @@ dotenv.config();
 import dealRoutes from './routes/dealRoutes.js';
 import imageRoutes from './routes/imageRoute.js';
 import authRoutes from './routes/authRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 const app = express();
 // Enable CORS
@@ -45,6 +46,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/deals', dealRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

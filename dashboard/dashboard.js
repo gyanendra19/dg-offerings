@@ -1310,8 +1310,7 @@ async function generateDealContent() {
   if (!generateBtn) return;
 
   const originalBtnText = generateBtn.innerHTML;
-  generateBtn.innerHTML =
-    '<i class="fas fa-spinner fa-spin"></i> Generating...';
+  generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
   generateBtn.disabled = true;
 
   const dealName = document.getElementById("dealName").value.trim();
@@ -1321,12 +1320,7 @@ async function generateDealContent() {
   }
 
   try {
-    const prompt = {
-      contents: [
-        {
-          parts: [
-            {
-              text: `Generate a detailed product deal for "${dealName}" in the following JSON format with markdown code block:
+    const prompt = `Generate a detailed product deal for "${dealName}" in the following JSON format with markdown code block:
 \`\`\`json
 {
   "name": "${dealName}",
@@ -1375,31 +1369,28 @@ async function generateDealContent() {
   ]
 }
 \`\`\`
-Make it realistic, professional, and specifically tailored to ${dealName}'s product category. Include at least 5 items in detailedDescription, useCases, and keyBenefits. Include at least 4 eligibility criteria and 5 FAQ items. Include at least 3 items in whatsIncluded and 2 reviews.`,
-            },
-          ],
-        },
-      ],
-    };
+Make it realistic, professional, and specifically tailored to ${dealName}'s product category. Include at least 5 items in detailedDescription, useCases, and keyBenefits. Include at least 4 eligibility criteria and 5 FAQ items. Include at least 3 items in whatsIncluded and 2 reviews.`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(prompt),
-      }
-    );
+    const response = await fetch('http://127.0.0.1:3000/api/ai/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ prompt })
+    });
 
     if (!response.ok) {
-      throw new Error("Failed to generate content");
+      throw new Error('Failed to generate content');
     }
 
-    const data = await response.json();
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to generate content');
+    }
+
     // Extract the JSON string from the response text
-    const jsonString = data.candidates[0].content.parts[0].text
+    const jsonString = result.data
       .replace("```json\n", "") // Remove the opening markdown
       .replace("\n```", ""); // Remove the closing markdown
 
