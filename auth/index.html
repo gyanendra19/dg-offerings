@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - FounderPerks</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-left">
+                <div class="auth-content">
+                    <div class="auth-header">
+                        <h1>Welcome Back</h1>
+                        <p>Sign in to access exclusive perks and deals</p>
+                    </div>
+                    <form class="auth-form" id="login-form">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" id="email" name="email" placeholder="name@company.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                                <button type="button" class="password-toggle">
+                                    <svg class="eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" name="remember">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="auth-submit">Sign in</button>
+                        <div class="social-auth">
+                            <span class="divider">Or continue with</span>
+                            <div class="social-buttons">
+                                <button type="button" class="social-button google">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                                    Google
+                                </button>
+                                <button type="button" class="social-button github">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                    </svg>
+                                    GitHub
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <p class="auth-switch">
+                    Don't have an account? <a href="#" class="switch-form" data-form="signup">Sign up</a>
+                </p>
+            </div>
+            <div class="auth-right">
+                <div class="auth-content">
+                    <div class="auth-header">
+                        <h1>Create Account</h1>
+                        <p>Join thousands of founders saving with FounderPerks</p>
+                    </div>
+                    <form class="auth-form" id="signup-form">
+                        <div class="form-group">
+                            <label for="name">Full name</label>
+                            <input type="text" id="name" name="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email address</label>
+                            <input type="email" id="signup-email" name="email" placeholder="name@company.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="signup-password" name="password" placeholder="••••••••" required>
+                                <button type="button" class="password-toggle">
+                                    <svg class="eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="terms">
+                                <input type="checkbox" name="terms" required>
+                                <span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="auth-submit">Create account</button>
+                        <div class="social-auth">
+                            <span class="divider">Or continue with</span>
+                            <div class="social-buttons">
+                                <button type="button" class="social-button google">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                                    Google
+                                </button>
+                                <button type="button" class="social-button github">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                    </svg>
+                                    GitHub
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <p class="auth-switch">
+                    Already have an account? <a href="#" class="switch-form" data-form="login">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Toggle password visibility
+        document.querySelectorAll('.password-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const input = button.parentElement.querySelector('input');
+                input.type = input.type === 'password' ? 'text' : 'password';
+            });
+        });
+
+        // Switch between login and signup forms
+        document.querySelectorAll('.switch-form').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('.auth-box').classList.toggle('show-signup');
+            });
+        });
+    </script>
+</body>
+</html> 

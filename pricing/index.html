@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Choose Your Plan</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .pricing-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-header h1 {
+            font-size: 2.5rem;
+            color: #1F2937;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-header p {
+            font-size: 1.125rem;
+            color: #6B7280;
+        }
+
+        .pricing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .toggle-option {
+            font-size: 1rem;
+            color: #6B7280;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .toggle-option.active {
+            background: #F3F4F6;
+            color: #1F2937;
+            font-weight: 500;
+        }
+
+        .pricing-layout {
+            display: flex;
+            gap: 3rem;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-benefits {
+            flex: 1;
+            padding-top: 2rem;
+            max-width: 350px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .benefit-item::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 48px;
+            bottom: -24px;
+            width: 2px;
+            background: rgba(99, 102, 241, 0.2);
+            z-index: 0;
+        }
+
+        .benefit-item:last-child::before {
+            display: none;
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 8px;
+            padding: 8px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            z-index: 1;
+        }
+
+        .benefit-content {
+            flex: 1;
+        }
+
+        .benefit-title {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .benefit-description {
+            color: #6B7280;
+            font-size: 0.95rem;
+        }
+
+        .pricing-grid {
+            flex: 1.5;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            min-width: 350px;
+        }
+
+        .pricing-card:hover {
+            border-color: #6366F1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            color: #1F2937;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pricing-card .description {
+            color: #6B7280;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card .price {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 1.5rem;
+            line-height: 1;
+        }
+
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6B7280;
+            margin-left: 0.25rem;
+        }
+
+        .pricing-card .pricing-feature {
+            width: 100%;
+            margin-bottom: 2rem;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .pricing-card .pricing-feature li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card .pricing-feature li::before {
+            content: "✓";
+            color: #10B981;
+            font-weight: bold;
+        }
+
+        .pricing-card .cta {
+            width: 100%;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-top: auto;
+        }
+
+        .pricing-card.free {
+            background: white;
+        }
+
+        .pricing-card.free .cta {
+            background: #F3F4F6;
+            color: #4B5563;
+        }
+
+        .pricing-card.premium {
+            background: #111827;
+            border: none;
+        }
+
+        .pricing-card.premium h3,
+        .pricing-card.premium .price,
+        .pricing-card.premium .pricing-feature li {
+            color: white;
+        }
+
+        .pricing-card.premium .description,
+        .pricing-card.premium .price span {
+            color: #9CA3AF;
+        }
+
+        .pricing-card.premium .pricing-feature li::before {
+            color: #10B981;
+        }
+
+        .pricing-card.premium .cta {
+            background: #10B981;
+            color: white;
+        }
+
+        .pricing-card.premium .cta:hover {
+            background: #059669;
+        }
+
+        .cancel-text {
+            text-align: center;
+            width: 100%;
+            font-size: 0.875rem;
+            color: #9CA3AF;
+            margin-top: 0.75rem;
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-layout {
+                flex-direction: column;
+            }
+
+            .pricing-benefits {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .benefit-item::before {
+                display: none;
+            }
+        }
+
+        .business-type-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 0 auto 2rem;
+        }
+
+        .business-type {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #6B7280;
+            font-size: 0.95rem;
+            user-select: none;
+        }
+
+        .business-type:hover {
+            background: #F3F4F6;
+        }
+
+        .business-type.active {
+            background: #4F46E5;
+            color: white;
+        }
+
+        .business-type svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/" data-link class="logo-text">FounderPerks</a>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links">
+                <a href="/" data-link class="nav-link">Browse Perks</a>
+                <a href="/pricing" data-link class="nav-link">Pricing</a>
+                <a href="/dashboard" data-link class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">About</a>
+                <a href="/#signup" data-link data-auth-type="signup" class="nav-link nav-button">Sign up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pricing-container">
+        <div class="pricing-header">
+            <h1>Choose the right plan for your business</h1>
+            <p>Join 145,155 businesses who use the power of FounderPerks to grow more and spend less</p>
+        </div>
+
+        <div class="business-type-selector">
+            <div class="business-type active" data-type="startup">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Startups & SMBs
+            </div>
+            <div class="business-type" data-type="agency">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Agencies & Consultants
+            </div>
+            <div class="business-type" data-type="accelerator">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                Accelerators & VCs
+            </div>
+            <div class="business-type" data-type="community">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Communities & Platforms
+            </div>
+        </div>
+
+        <div class="pricing-toggle">
+            <span class="toggle-option active">Yearly</span>
+            <span class="toggle-option">Lifetime</span>
+        </div>
+
+        <div class="pricing-layout">
+            <div class="pricing-benefits">
+                <div class="benefit-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/DigitalOcean_logo.svg" alt="DigitalOcean" class="benefit-icon">
+                    <div class="benefit-content">
+                        <div class="benefit-title">$5,000 in credits for 1 year</div>
+                        <div class="benefit-description">Get started with cloud infrastructure</div>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div style="display: flex; gap: 4px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" alt="Notion" class="benefit-icon" style="width: 30px; height: 30px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg" alt="Slack" class="benefit-icon" style="width: 30px; height: 30px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/HubSpot_Logo.svg" alt="HubSpot" class="benefit-icon" style="width: 30px; height: 30px;">
+                    </div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">300+ Premium deals</div>
+                        <div class="benefit-description">Access to all premium tools and services</div>
+                    </div>
+                </div>
+
+                <div class="benefit-item" style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px;">
+                    <div class="benefit-content">
+                        <div class="benefit-title" style="color: #059669">Special offer</div>
+                        <div class="benefit-description">This deal can be used if you have not signed up for DigitalOcean yet or if you're using it on the free version.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card free">
+                    <h3>Free</h3>
+                    <p class="description">Access all of our free deals</p>
+                    <div class="price">$0 <span>Free access</span></div>
+                    <ul class="pricing-feature">
+                        <li>Unlimited access to all of our free deals</li>
+                        <li>New deals each week</li>
+                    </ul>
+                    <a href="#" class="cta">You're already signed in</a>
+                </div>
+
+                <div class="pricing-card premium">
+                    <h3>Premium</h3>
+                    <p class="description">Access all of the deals</p>
+                    <div class="price">$149 <span>/year</span></div>
+                    <ul class="pricing-feature">
+                        <li>Access all of the deals on our marketplace</li>
+                        <li>New Premium deals each week</li>
+                        <li>Private community access</li>
+                        <li>7/7 Premium support</li>
+                    </ul>
+                    <a href="#" class="cta">Go Premium</a>
+                    <p class="cancel-text">cancel anytime</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="more-tools">
+        <h2>More Tools Available</h2>
+        <div class="grid">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">FounderPerks</div>
+            <div class="footer-links">
+                <a href="/" data-link>Home</a>
+                <a href="#" class="footer-link">About</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+            </div>
+            <div class="footer-copy">&copy; 2024 FounderPerks. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        const plans = {
+            startup: {
+                yearly: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '149',
+                        period: '/year',
+                        features: [
+                            'Access all of the deals on our marketplace',
+                            'New Premium deals each week',
+                            'Private community access',
+                            '7/7 Premium support'
+                        ]
+                    }
+                },
+                lifetime: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '999',
+                        period: ' one-time',
+                        features: [
+                            'Everything in Yearly plan',
+                            'Lifetime access to all current deals',
+                            'All future Premium deals included',
+                            'Priority support 24/7',
+                            'Early access to new features',
+                            'Exclusive lifetime member community',
+                            'Special lifetime member events'
+                        ]
+                    }
+                }
+            },
+            agency: {
+                yearly: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '299',
+                        period: '/year',
+                        features: [
+                            'Everything in Startup plan',
+                            'Client management dashboard',
+                            'Bulk deal activation',
+                            'White-label reports',
+                            'Agency partner benefits',
+                            'Priority agency support'
+                        ]
+                    }
+                },
+                lifetime: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '1999',
+                        period: ' one-time',
+                        features: [
+                            'Everything in Agency Yearly plan',
+                            'Lifetime access to agency features',
+                            'Unlimited client accounts',
+                            'Agency growth resources',
+                            'Exclusive agency community',
+                            'Quarterly strategy sessions'
+                        ]
+                    }
+                }
+            },
+            accelerator: {
+                yearly: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '499',
+                        period: '/year',
+                        features: [
+                            'Everything in Agency plan',
+                            'Portfolio company dashboard',
+                            'Bulk credits distribution',
+                            'Custom deal curation',
+                            'Accelerator partner status',
+                            'Dedicated account manager'
+                        ]
+                    }
+                },
+                lifetime: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '2999',
+                        period: ' one-time',
+                        features: [
+                            'Everything in Accelerator Yearly plan',
+                            'Unlimited portfolio companies',
+                            'Custom partner integrations',
+                            'Deal sourcing assistance',
+                            'Annual strategic review',
+                            'Priority deal access'
+                        ]
+                    }
+                }
+            },
+            community: {
+                yearly: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '399',
+                        period: '/year',
+                        features: [
+                            'Everything in Startup plan',
+                            'Community member dashboard',
+                            'Bulk member invites',
+                            'Custom community perks',
+                            'Community analytics',
+                            'Dedicated support team'
+                        ]
+                    }
+                },
+                lifetime: {
+                    free: {
+                        price: '0',
+                        period: 'Free access',
+                        features: [
+                            'Unlimited access to all of our free deals',
+                            'New deals each week'
+                        ]
+                    },
+                    premium: {
+                        price: '2499',
+                        period: ' one-time',
+                        features: [
+                            'Everything in Community Yearly plan',
+                            'Unlimited community size',
+                            'Custom community portal',
+                            'API access',
+                            'Community success manager',
+                            'Exclusive community events'
+                        ]
+                    }
+                }
+            }
+        };
+
+        let currentBusinessType = 'startup';
+        let currentPlanDuration = 'yearly';
+
+        function updatePlanDetails() {
+            const plan = plans[currentBusinessType][currentPlanDuration];
+            
+            // Update Free plan
+            const freeCard = document.querySelector('.pricing-card.free');
+            const freePrice = freeCard.querySelector('.price');
+            const freeFeatures = freeCard.querySelector('.pricing-feature');
+            
+            freePrice.innerHTML = `$${plan.free.price} <span>${plan.free.period}</span>`;
+            freeFeatures.innerHTML = plan.free.features.map(feature => 
+                `<li>${feature}</li>`
+            ).join('');
+
+            // Update Premium plan
+            const premiumCard = document.querySelector('.pricing-card.premium');
+            const premiumPrice = premiumCard.querySelector('.price');
+            const premiumFeatures = premiumCard.querySelector('.pricing-feature');
+            
+            premiumPrice.innerHTML = `$${plan.premium.price} <span>${plan.premium.period}</span>`;
+            premiumFeatures.innerHTML = plan.premium.features.map(feature => 
+                `<li>${feature}</li>`
+            ).join('');
+
+            // Update CTA text for Premium
+            const premiumCTA = premiumCard.querySelector('.cta');
+            premiumCTA.textContent = currentPlanDuration === 'lifetime' ? 'Go Lifetime' : 'Go Premium';
+        }
+
+        // Business type selector
+        const businessTypes = document.querySelectorAll('.business-type');
+        businessTypes.forEach(type => {
+            type.addEventListener('click', () => {
+                businessTypes.forEach(t => t.classList.remove('active'));
+                type.classList.add('active');
+                currentBusinessType = type.dataset.type;
+                updatePlanDetails();
+            });
+        });
+
+        // Toggle between Yearly and Lifetime pricing
+        const toggleOptions = document.querySelectorAll('.toggle-option');
+        toggleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                toggleOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentPlanDuration = option.textContent.toLowerCase();
+                updatePlanDetails();
+            });
+        });
+
+        // Initialize with startup yearly plan
+        updatePlanDetails();
+
+        // Initialize more tools section
+        const moreToolsHtml = offers
+            .slice(0, 6)
+            .map(o => `
+                <div class="card">
+                    ${o.id === 'aws' ? '<span class="flame">🔥</span>' : ''}
+                    ${o.id === 'digitalocean' ? '<span class="flame">🔥</span>' : ''}
+                    ${o.id === 'xero' ? '<span class="badge">NEW</span>' : ''}
+                    <img src="${o.logo}" class="logo" alt="${o.name}">
+                    <div class="discount">${o.discount}</div>
+                    <div class="description">${o.description}</div>
+                    <a href="/details/index.html#${o.id}" data-link class="cta">Learn More</a>
+                </div>
+            `).join('');
+        document.querySelector('.more-tools .grid').innerHTML = moreToolsHtml;
+    </script>
+</body>
+</html> 

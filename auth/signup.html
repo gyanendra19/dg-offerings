@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Create an account</h1>
+      <p>Join FounderPerks to access exclusive deals</p>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
+
+    <form class="auth-form" id="signup-form">
+      <div class="form-group">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Create a password">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+      </div>
+
+      <button type="submit" class="auth-button">Create account</button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="#login" data-link data-auth-type="login">Sign in</a>
+    </div>
+  </div>
+</div> 

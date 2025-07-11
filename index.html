@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SaaS Deals Landing Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="/" data-link class="logo-text">FounderPerks</a>
+      </div>
+      <div class="mobile-menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="nav-links">
+        <a href="/" data-link class="nav-link">Browse Perks</a>
+        <a href="/pricing" data-link class="nav-link">Pricing</a>
+        <a href="/dashboard" data-link class="nav-link">Dashboard</a>
+        <a href="#" class="nav-link">About</a>
+        <a href="/#signup" data-link data-auth-type="signup" class="nav-link nav-button">Sign up</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Content will be dynamically inserted here -->
+  </main>
+
+  <!-- Home page template -->
+  <template id="home-template">
+    <div class="yellow-bg"></div>
+    <div class="hero">
+      <div class="new-badge">New <span class="highlight">13 new perks added this month →</span></div>
+      
+      <h1>The #1 Perks Platform for Founders</h1>
+      
+      <div class="hero-subtitle">
+        Unlock <span class="highlight-amount">$3,000,000+</span> in exclusive savings from 350+ partners.
+      </div>
+
+      <div class="features">
+        <div class="feature">✓ 350+ exclusive perks</div>
+        <div class="feature">✓ All directly negotiated by us</div>
+        <div class="feature">✓ Trusted by 100,000+ founders globally</div>
+      </div>
+
+      <div class="email-signup">
+        <input type="email" placeholder="e.g max@yourbusiness.com" />
+      </div>
+    </div>
+
+    <h2>Featured Deals</h2>
+
+    <div class="grid loading">
+      <!-- Skeleton loading state -->
+      <div class="skeleton-grid">
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-image"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-image"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-image"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-image"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-image"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-image"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Offer details template -->
+  <template id="offer-template">
+    <div class="offer-page">
+      <div class="offer-header">
+        <div style="display: flex; align-items: flex-start; flex-direction: column; margin: auto;">
+          <img style="height: 40px;" src="${offer.logo}" class="offer-logo" alt="${offer.name}">
+          <h1>${offer.name}</h1>
+        </div>
+        <div class="offer-discount">${offer.discount}</div>
+        <div class="offer-subtitle">${offer.description}</div>
+      </div>
+
+      <div class="offer-layout">
+        <div class="offer-main">
+          <div class="offer-description">
+            <h2>About this offer</h2>
+            ${detailedDescription}
+            
+            <div class="key-benefits">
+              <h3>Key Benefits</h3>
+              <div class="benefits-grid">
+                ${benefits}
+              </div>
+            </div>
+          </div>
+
+          <div class="offer-features">
+            <h2>What's included</h2>
+            <div class="features-grid">
+              ${features}
+            </div>
+          </div>
+
+          <div class="offer-comparison">
+            <h2>Plan Comparison</h2>
+            <div class="comparison-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Features</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Users</td>
+                  </tr>
+                  <tr>
+                    <td>Storage</td>
+                  </tr>
+                  <tr>
+                    <td>Support</td>
+                  </tr>
+                  <tr>
+                    <td>Custom Domain</td>
+                  </tr>
+                  <tr>
+                    <td>Admin Controls</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="offer-eligibility">
+            <h2>Eligibility criteria</h2>
+            <ul>
+              ${eligibility}
+            </ul>
+          </div>
+
+          <div class="offer-faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-list">
+              ${faq}
+            </div>
+          </div>
+
+          <div class="testimonials">
+            <h2>What others are saying</h2>
+            <div class="testimonials-grid">
+              ${testimonials}
+            </div>
+          </div>
+          <div class="alternatives">
+            <h2>Alternatives</h2>
+            <div class="alternatives-grid">
+              ${alternatives}
+            </div>
+          </div>
+          
+          <div class="more-tools">
+            <h2>More Tools Available</h2>
+            <div class="grid">
+              ${moreTools}
+            </div>
+          </div>
+        </div>
+
+        <div class="offer-sidebar">
+          <div class="offer-sidebar-content">
+            <div class="dynamic-card">
+              <div class="card-face tool-overview">
+                <img src="${offer.logo}" class="tool-hero-image" alt="${offer.name}">
+                <div class="tool-description">
+                  <p>${offer.shortDescription}</p>
+                </div>
+                <div class="key-points">
+                  <h3>Why Choose ${offer.name}?</h3>
+                  <ul>
+                    ${offer.keyPoints}
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="card-face pricing-details">
+                <div class="price-item">
+                  <span class="label">Original Price</span>
+                  <span class="value original">${offer.originalPrice}</span>
+                </div>
+                <div class="price-item highlight">
+                  <span class="label">Your Price</span>
+                  <span class="value discounted">${offer.discountedPrice}</span>
+                </div>
+                <div class="price-item">
+                  <span class="label">You Save</span>
+                  <span class="value savings">${offer.savings}</span>
+                </div>
+                <button class="cta-large">Get this deal</button>
+                <div class="deal-stats">
+                  <div class="stat">
+                    <span class="stat-icon">👥</span>
+                    <span class="stat-text">${offer.stats.redeemed} redeemed</span>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-icon">⭐</span>
+                    <span class="stat-text">${offer.stats.rating} (${offer.stats.reviews} reviews)</span>
+                  </div>
+                </div>
+                <div class="guarantee">
+                  <span class="guarantee-icon">🛡️</span>
+                  <p>30-day money-back guarantee</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Pricing page template -->
+  <template id="pricing-template">
+    <div class="pricing-container">
+      <div class="hero">
+        <div class="new-badge">Special Launch Offer</div>
+        <h1>Simple, Transparent Pricing</h1>
+        <div class="hero-subtitle">Choose the plan that's right for your business</div>
+      </div>
+
+      <div class="pricing-toggle">
+        <span class="toggle-option active" data-period="yearly">Yearly</span>
+        <span class="toggle-option" data-period="lifetime">Lifetime</span>
+      </div>
+
+      <div class="business-type-selector">
+        <div class="selector-option active" data-type="startup">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M13 19V7.83L17.88 12.71L19.29 11.29L12 4L4.71 11.29L6.12 12.71L11 7.83V19H13Z" fill="currentColor"/>
+          </svg>
+          <span>Startups & SMBs</span>
+        </div>
+        <div class="selector-option" data-type="agency">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 15.99L12 18.72L7 15.99V12.27L12 15L17 12.27V15.99Z" fill="currentColor"/>
+          </svg>
+          <span>Agencies & Consultants</span>
+        </div>
+        <div class="selector-option" data-type="accelerator">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="currentColor"/>
+            <path d="M7 12H9V17H7V12ZM15 7H17V17H15V7ZM11 14H13V17H11V14ZM11 10H13V12H11V10Z" fill="currentColor"/>
+          </svg>
+          <span>Accelerators & VCs</span>
+        </div>
+        <div class="selector-option" data-type="community">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11ZM8 11C9.66 11 10.99 9.66 10.99 8C10.99 6.34 9.66 5 8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11ZM8 13C5.67 13 1 14.17 1 16.5V19H15V16.5C15 14.17 10.33 13 8 13ZM16 13C15.71 13 15.38 13.02 15.03 13.05C16.19 13.89 17 15.02 17 16.5V19H23V16.5C23 14.17 18.33 13 16 13Z" fill="currentColor"/>
+          </svg>
+          <span>Communities & Platforms</span>
+        </div>
+      </div>
+
+      <div class="pricing-cards">
+        <div class="pricing-card free">
+          <div class="card-header">
+            <h3>Free</h3>
+            <div class="price">$0</div>
+            <div class="period">Forever</div>
+          </div>
+          <div class="card-features">
+            <div class="feature">✓ Access to basic perks</div>
+            <div class="feature">✓ Up to 3 active deals</div>
+            <div class="feature">✓ Community support</div>
+          </div>
+          <button class="cta">Get Started</button>
+        </div>
+
+        <div class="pricing-card premium">
+          <div class="card-header">
+            <h3>Premium</h3>
+            <div class="price yearly active">$149</div>
+            <div class="price lifetime">$999</div>
+            <div class="period yearly active">per year</div>
+            <div class="period lifetime">one-time</div>
+          </div>
+          <div class="card-features">
+            <div class="feature">✓ All Free features</div>
+            <div class="feature">✓ Unlimited active deals</div>
+            <div class="feature">✓ Priority support</div>
+            <div class="feature">✓ Early access to new deals</div>
+            <div class="feature">✓ Custom deal requests</div>
+            <div class="feature">✓ Dedicated account manager</div>
+          </div>
+          <button class="cta">Upgrade Now</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">FounderPerks</div>
+      <div class="footer-links">
+        <a href="/" data-link>Home</a>
+        <a href="#" class="footer-link">About</a>
+        <a href="#" class="footer-link">Contact</a>
+        <a href="#" class="footer-link">Privacy Policy</a>
+      </div>
+      <div class="footer-copy">&copy; 2024 FounderPerks. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Function to fetch deals from the API
+    async function fetchDeals() {
+      try {
+        const response = await fetch('http://localhost:3000/api/deals');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
+        const result = await response.json();
+        if (result.success && Array.isArray(result.data)) {
+          return result.data;
+        }
+        
+        console.error('Unexpected API response format:', result);
+        return [];
+      } catch (error) {
+        console.error('Error fetching deals:', error);
+        return [];
+      }
+    }
+
+    // Function to format price
+    function formatPrice(price) {
+      return typeof price === 'number' 
+        ? `$${price.toFixed(2)}` 
+        : price;
+    }
+
+    // Function to calculate and format discount percentage
+    function calculateDiscount(original, discounted) {
+      if (!original || !discounted) return '';
+      const discount = ((original - discounted) / original) * 100;
+      return `${Math.round(discount)}% Off`;
+    }
+
+    // Function to create a deal card element
+    function createDealCard(deal) {
+      const details = deal.details?.[0] || {};
+      const discountText = details.originalPrice && details.discountedPrice
+        ? calculateDiscount(details.originalPrice, details.discountedPrice)
+        : 'Special Offer';
+      
+      // Get logo URL based on deal name (you might want to add actual logo URLs to your API data)
+      const logoMap = {
+        'Google Workspace': 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+        'Typeform': '/typeform.png',
+        'AWS': 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg',
+        'Webflow': 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Webflow_logo_2023.svg'
+      };
+      
+      const logoUrl = logoMap[deal.name.split(' ')[0]] || 'https://via.placeholder.com/150';
+      
+      // Determine if the deal is "hot" based on certain criteria
+      const isHot = details.rating >= 4.5 || 
+                    (details.originalPrice && details.discountedPrice && 
+                     ((details.originalPrice - details.discountedPrice) / details.originalPrice >= 0.5));
+
+      // Check if the deal is new (created within the last 7 days)
+      const isNew = new Date(deal.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+      return `
+        <div class="card">
+          ${isHot ? '<span class="flame">🔥</span>' : ''}
+          ${isNew ? '<span class="badge">NEW</span>' : ''}
+          <img src="${deal.imageUrl}" class="logo" alt="${deal.name}">
+          <div class="discount">${discountText}</div>
+          <div class="description">${deal.description || ''}</div>
+          <div class="price-info">
+            ${details.originalPrice ? `
+              <span class="original-price">${formatPrice(details.originalPrice)}</span>
+              <span class="discounted-price">${formatPrice(details.discountedPrice)}</span>
+            ` : ''}
+          </div>
+          ${details.rating ? `
+            <div class="rating">
+              <span class="stars">⭐</span>
+              <span class="rating-value">${details.rating.toFixed(1)}</span>
+            </div>
+          ` : ''}
+          <a href="/details/index.html#${deal._id}" data-link class="cta">Learn More</a>
+        </div>
+      `;
+    }
+
+    // Function to render deals in the grid
+    function renderDeals(deals) {
+      const gridContainer = document.querySelector('.grid');
+      if (!gridContainer) return;
+
+      // Update the deals count in the hero section
+      const dealsCountElement = document.querySelector('.hero-subtitle .highlight-amount');
+      if (dealsCountElement) {
+        const totalValue = deals.reduce((sum, deal) => {
+          const savings = deal.details?.[0]?.originalPrice - deal.details?.[0]?.discountedPrice || 0;
+          return sum + savings;
+        }, 0);
+        dealsCountElement.textContent = `$${Math.round(totalValue).toLocaleString()}+`;
+      }
+
+      // Render the deals
+      const dealsHTML = deals.map(deal => createDealCard(deal)).join('');
+      gridContainer.innerHTML = dealsHTML;
+    }
+
+    // Add styles for new elements
+    const styles = `
+      .card .price-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        margin: 10px 0;
+      }
+      .card .original-price {
+        text-decoration: line-through;
+        color: #666;
+        font-size: 0.9em;
+      }
+      .card .discounted-price {
+        color: #2563eb;
+        font-weight: bold;
+      }
+      .card .rating {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 10px;
+        color: #666;
+      }
+      .card .stars {
+        color: #f59e0b;
+      }
+    `;
+
+    // Add the styles to the document
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+
+    // Initialize deals when the page loads
+    document.addEventListener('DOMContentLoaded', async () => {
+      const deals = await fetchDeals();
+      renderDeals(deals);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 style="cursor: pointer;">Dashboard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="has-submenu">
+                        <a href="#">
+                            <i class="fas fa-handshake"></i> 
+                            Deals
+                            <i class="fas fa-chevron-down submenu-arrow"></i>
+                        </a>
+                        <ul class="submenu">
+                            <!-- Deal items will be populated here -->
+                        </ul>
+                        <div class="submenu-header">
+                            <button id="addDealBtn" class="add-deal-btn">
+                                <i class="fas fa-plus"></i> Add New Deal
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-search">
+                    <input type="search" placeholder="Search...">
+                </div>
+                <div class="header-user">
+                    <span class="notifications">
+                        <i class="fas fa-bell"></i>
+                    </span>
+                    <span class="user-profile">
+                        <i class="fas fa-user-circle"></i>
+                    </span>
+                </div>
+            </header>
+            
+            <div class="content-body">
+                <h1>Welcome to Deals Dashboard</h1>
+                <p>Manage and update your deals below.</p>
+            </div>
+        </main>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html> 
