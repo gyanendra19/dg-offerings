@@ -352,7 +352,7 @@
     // Function to fetch deals from the API
     async function fetchDeals() {
       try {
-        const response = await fetch('http://localhost:3000/api/deals');
+        const response = await fetch('/api/deals');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
