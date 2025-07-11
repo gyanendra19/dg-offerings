@@ -1,7 +1,7 @@
 // Function to check if user is authenticated
 async function checkAuthentication() {
     try {
-        const response = await fetch('http://127.0.0.1:3000/api/auth/me', {
+        const response = await fetch('/api/auth/me', {
             credentials: 'include' // Important: needed for cookies to be sent
         });
         const data = await response.json();

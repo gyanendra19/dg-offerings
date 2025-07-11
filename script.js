@@ -696,7 +696,7 @@ function handleRoute() {
 // Function to fetch deal details from the API
 async function fetchDealDetails(dealId) {
   try {
-    const response = await fetch(`http://localhost:3000/api/deals/${dealId}`);
+    const response = await fetch(`/api/deals/${dealId}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -995,7 +995,7 @@ async function updatePageContent(deal) {
   });
 
   // Fetch other deals for alternatives and more tools sections
-  fetch('http://localhost:3000/api/deals')
+      fetch('/api/deals')
     .then(response => response.json())
     .then(result => {
       if (result.success && result.data) {
