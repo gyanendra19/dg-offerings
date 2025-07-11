@@ -1001,9 +1001,17 @@ async function updatePageContent(deal) {
       if (result.success && result.data) {
         const otherDeals = result.data.filter(d => d._id !== deal._id);
         
+        // Sort deals to put recent first
+        otherDeals.sort((a, b) => {
+          if (a.recent) return -1;
+          if (b.recent) return 1;
+          return 0;
+        });
+
         // Update alternatives section
         const alternativesHtml = otherDeals.slice(0, 3).map(d => `
-          <div class="alternative-card">
+          <div class="alternative-card ${d.recent ? 'recent' : ''}">
+            ${d.recent ? '<div class="recent-badge">Recent</div>' : ''}
             <img src="${d.imageUrl}" class="logo" alt="${d.name}">
             <div class="alt-name">${d.name}</div>
             <a href="/details#${d._id}" data-link class="alt-link">View</a>

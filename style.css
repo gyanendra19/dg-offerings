@@ -1344,6 +1344,24 @@ h1 {
   background: rgba(0, 0, 0, 0.8);
 }
 
+.alternative-card.recent {
+  border: 2px solid #4CAF50;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
+
+.recent-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1;
+}
+
 .alternative-card .logo {
   height: 48px;
   width: auto;
