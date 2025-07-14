@@ -318,6 +318,7 @@ async function saveSectionChanges(section, sectionData) {
         const dealData = {
             name: document.getElementById("dealName").value,
             description: document.getElementById("dealDescription").value,
+            coupon: document.getElementById("couponCode")?.value || "",
             imageUrl:
                 imageUrl ||
                 document.getElementById("dealImage").getAttribute("data-original-url"),
@@ -436,6 +437,9 @@ async function saveNewDeal() {
             name: document.getElementById("dealName").value,
             description: document.getElementById("dealDescription").value,
             imageUrl: imageUrl,
+            recent: false,
+            trending: false,
+            popular: false,
             details: [
                 {
                     originalPrice: parseFloat(
@@ -534,6 +538,9 @@ function setupDealEventHandlers(dealData) {
     });
   }
 
+  // Setup status toggle buttons
+  setupStatusToggleButtons(dealData);
+
   if (editBtn && saveBtn && cancelBtn && form) {
     // Edit button handler
     editBtn.addEventListener("click", () => {
@@ -549,6 +556,13 @@ function setupDealEventHandlers(dealData) {
         if (input.type === "file") {
           input.removeAttribute("disabled");
         }
+      });
+
+      // Enable status toggle buttons
+      const statusToggles = document.querySelectorAll(".status-toggle");
+      statusToggles.forEach(toggle => {
+        toggle.style.pointerEvents = "auto";
+        toggle.style.opacity = "1";
       });
 
       // Show all add and remove buttons
@@ -574,7 +588,11 @@ function setupDealEventHandlers(dealData) {
           _id: dealData._id,
           name: form.querySelector('input[type="text"]').value,
           description: form.querySelector("textarea").value,
+          coupon: document.getElementById("couponCode")?.value || "",
           imageUrl: imageUrl, // Add the image URL to the deal data
+          recent: dealData.recent || false,
+          trending: dealData.trending || false,
+          popular: dealData.popular || false,
           details: [
             {
               originalPrice: parseFloat(
@@ -678,6 +696,20 @@ function setupDealEventHandlers(dealData) {
         imagePreview.innerHTML =
           '<div class="no-image">No image uploaded</div>';
       }
+
+      // Reset status toggle buttons to original state
+      const statusToggles = document.querySelectorAll(".status-toggle");
+      statusToggles.forEach(toggle => {
+        const status = toggle.dataset.status;
+        if (dealData[status]) {
+          toggle.classList.add("active");
+        } else {
+          toggle.classList.remove("active");
+        }
+        // Disable status toggle buttons
+        toggle.style.pointerEvents = "none";
+        toggle.style.opacity = "0.6";
+      });
 
       // Hide all add and remove buttons
       form
@@ -823,6 +855,47 @@ function setupAddButtons() {
   });
 }
 
+// Setup status toggle buttons functionality
+function setupStatusToggleButtons(dealData) {
+  const statusToggles = document.querySelectorAll(".status-toggle");
+  
+  // Initially disable status toggle buttons (not in edit mode)
+  statusToggles.forEach(toggle => {
+    toggle.style.pointerEvents = "none";
+    toggle.style.opacity = "0.6";
+  });
+  
+  statusToggles.forEach(toggle => {
+    toggle.addEventListener("click", () => {
+      const status = toggle.dataset.status;
+      
+      // If this button is already active, deactivate it
+      if (toggle.classList.contains("active")) {
+        toggle.classList.remove("active");
+        dealData[status] = false;
+      } else {
+        // Deactivate all other buttons first
+        statusToggles.forEach(otherToggle => {
+          otherToggle.classList.remove("active");
+          const otherStatus = otherToggle.dataset.status;
+          dealData[otherStatus] = false;
+        });
+        
+        // Activate the clicked button
+        toggle.classList.add("active");
+        dealData[status] = true;
+      }
+      
+      console.log(`Status ${status} updated to:`, dealData[status]);
+      console.log("All statuses:", {
+        recent: dealData.recent,
+        trending: dealData.trending,
+        popular: dealData.popular
+      });
+    });
+  });
+}
+
 // Add click handler for new deal button
 document.getElementById("addDealBtn")?.addEventListener("click", () => {
   loadNewDealForm();
@@ -905,6 +978,12 @@ function loadNewDealForm() {
                             <div class="form-group">
                                 <label>Discounted Price</label>
                                 <input type="number" id="discountedPrice" class="form-control" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Coupon Code</label>
+                                <input type="text" id="couponCode" class="form-control" placeholder="Enter coupon code (optional)">
                             </div>
                         </div>
                     </div>
@@ -1209,6 +1288,10 @@ async function saveNewDeal() {
   const dealData = {
     name: document.getElementById("dealName").value,
     description: document.getElementById("dealDescription").value,
+    coupon: document.getElementById("couponCode").value,
+    recent: false,
+    trending: false,
+    popular: false,
     details: [
       {
         originalPrice: parseFloat(
@@ -1325,6 +1408,7 @@ async function generateDealContent() {
 {
   "name": "${dealName}",
   "description": "A compelling description of ${dealName}'s value proposition",
+  "coupon": "SAVE20",
   "originalPrice": number,
   "discountedPrice": number,
   "detailedDescription": [
@@ -1369,9 +1453,9 @@ async function generateDealContent() {
   ]
 }
 \`\`\`
-Make it realistic, professional, and specifically tailored to ${dealName}'s product category. Include at least 5 items in detailedDescription, useCases, and keyBenefits. Include at least 4 eligibility criteria and 5 FAQ items. Include at least 3 items in whatsIncluded and 2 reviews.`;
+Make it realistic, professional, and specifically tailored to ${dealName}'s product category. Include at least 5 items in detailedDescription, useCases, and keyBenefits. Include at least 4 eligibility criteria and 5 FAQ items. Include at least 3 items in whatsIncluded and 2 reviews. Generate a realistic coupon code that matches the deal.`;
 
-    const response = await fetch('http://127.0.0.1:3000/api/ai/generate', {
+    const response = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -1400,6 +1484,7 @@ Make it realistic, professional, and specifically tailored to ${dealName}'s prod
     document.getElementById("dealName").value = generatedContent.name;
     document.getElementById("dealDescription").value =
       generatedContent.description;
+    document.getElementById("couponCode").value = generatedContent.coupon || "";
     document.getElementById("originalPrice").value =
       generatedContent.originalPrice.toFixed(2);
     document.getElementById("discountedPrice").value =
@@ -1747,6 +1832,7 @@ function setupSectionSaveHandlers() {
           sectionData.name = document.getElementById("dealName").value;
           sectionData.description =
             document.getElementById("dealDescription").value;
+          sectionData.coupon = document.getElementById("couponCode")?.value || "";
           break;
         case "details":
           sectionData.details = [
@@ -1843,8 +1929,16 @@ function setupSectionSaveHandlers() {
 // Function to create a deal card
 function createDealCard(deal) {
     const details = deal.details?.[0] || {};
+    
+    // Create status badges
+    const statusBadges = [];
+    if (deal.recent) statusBadges.push('<span class="status-badge recent">Recent</span>');
+    if (deal.trending) statusBadges.push('<span class="status-badge trending">Trending</span>');
+    if (deal.popular) statusBadges.push('<span class="status-badge popular">Popular</span>');
+    
     return `
         <div class="deal-card" data-deal-id="${deal._id}">
+            ${statusBadges.join('')}
             <img src="${deal.imageUrl}" class="logo" alt="${deal.name}">
             <div class="deal-name">${deal.name}</div>
             <div class="deal-description">${deal.description}</div>
@@ -1855,15 +1949,7 @@ function createDealCard(deal) {
                 ` : ''}
             </div>
             <div class="deal-actions">
-                <span class="status-badge ${deal.recent ? 'recent' : ''}">
-                    ${deal.recent ? 'Recent' : ''}
-                </span>
-                <span class="status-badge ${deal.trending ? 'trending' : ''}">
-                    ${deal.trending ? 'Trending' : ''}
-                </span>
-                <span class="status-badge ${deal.popular ? 'popular' : ''}">
-                    ${deal.popular ? 'Popular' : ''}
-                </span>
+                <!-- Status badges are now shown at the top of the card -->
             </div>
         </div>
     `;
@@ -1945,7 +2031,28 @@ async function loadAndRenderDeals() {
         if (!response.ok) throw new Error("Failed to fetch deals");
 
         const result = await response.json();
-        const deals = result.success && Array.isArray(result.data) ? result.data : [];
+        let deals = result.success && Array.isArray(result.data) ? result.data : [];
+        
+        // Sort deals: status deals first, then others
+        deals = deals.sort((a, b) => {
+          const aHasStatus = a.recent || a.trending || a.popular;
+          const bHasStatus = b.recent || b.trending || b.popular;
+          
+          if (aHasStatus && !bHasStatus) return -1;
+          if (!aHasStatus && bHasStatus) return 1;
+          
+          // If both have status, prioritize recent > trending > popular
+          if (aHasStatus && bHasStatus) {
+            if (a.recent && !b.recent) return -1;
+            if (!a.recent && b.recent) return 1;
+            if (a.trending && !b.trending) return -1;
+            if (!a.trending && b.trending) return 1;
+            if (a.popular && !b.popular) return -1;
+            if (!a.popular && b.popular) return 1;
+          }
+          
+          return 0;
+        });
 
         const contentBody = document.querySelector(".content-body");
         contentBody.innerHTML = `
@@ -2041,16 +2148,17 @@ async function loadDealDetails(deal) {
                     <div style="display: flex; justify-content: space-between; align-items: center;" class="form-section-header">
                             <h2>Basic Information</h2>
                             <div class="status-toggles">
-                                   <button class="status-toggle ${deal.recent ? 'active' : ''}" data-status="recent">
-                                       <i class="fas fa-clock"></i> Recent
-                                   </button>
-                                   <button class="status-toggle ${deal.trending ? 'active' : ''}" data-status="trending">
-                                       <i class="fas fa-chart-line"></i> Trending
-                                   </button>
-                                   <button class="status-toggle ${deal.popular ? 'active' : ''}" data-status="popular">
-                                       <i class="fas fa-fire"></i> Popular
-                                   </button>
-                               </div>
+                                <div class="status-label">Deal Status (Only one can be active):</div>
+                                <button class="status-toggle ${dealData.recent ? 'active' : ''}" data-status="recent" title="Mark as recent deal">
+                                    <i class="fas fa-clock"></i> Recent
+                                </button>
+                                <button class="status-toggle ${dealData.trending ? 'active' : ''}" data-status="trending" title="Mark as trending deal">
+                                    <i class="fas fa-chart-line"></i> Trending
+                                </button>
+                                <button class="status-toggle ${dealData.popular ? 'active' : ''}" data-status="popular" title="Mark as popular deal">
+                                    <i class="fas fa-fire"></i> Popular
+                                </button>
+                            </div>
                     </div>
                     <div class="form-section-body">
                             <div class="form-group">
@@ -2086,6 +2194,12 @@ async function loadDealDetails(deal) {
                                     <div class="form-group">
                                         <label>Discounted Price</label>
                                         <input type="number" step="0.01" class="form-control" value="${dealData.details?.[0]?.discountedPrice || 0}" readonly data-original="${dealData.details?.[0]?.discountedPrice || 0}">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Coupon Code</label>
+                                        <input type="text" id="couponCode" class="form-control" value="${dealData.coupon || ''}" readonly data-original="${dealData.coupon || ''}" placeholder="Enter coupon code (optional)">
                                     </div>
                                 </div>
                             </div>

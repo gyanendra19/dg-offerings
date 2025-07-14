@@ -384,6 +384,14 @@
       return `${Math.round(discount)}% Off`;
     }
 
+    // Function to truncate description to 30 words
+    function truncateDescription(description) {
+      if (!description) return '';
+      const words = description.split(' ');
+      if (words.length <= 20) return description;
+      return words.slice(0, 20).join(' ') + '...';
+    }
+
     // Function to create a deal card element
     function createDealCard(deal) {
       const details = deal.details?.[0] || {};
@@ -409,13 +417,19 @@
       // Check if the deal is new (created within the last 7 days)
       const isNew = new Date(deal.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
+      // Create status badges
+      const statusBadges = [];
+      if (deal.recent) statusBadges.push('<span class="status-badge recent">Recent</span>');
+      if (deal.trending) statusBadges.push('<span class="status-badge trending">Trending</span>');
+      if (deal.popular) statusBadges.push('<span class="status-badge popular">Popular</span>');
+
       return `
         <div class="card">
           ${isHot ? '<span class="flame">🔥</span>' : ''}
-          ${isNew ? '<span class="badge">NEW</span>' : ''}
+          ${statusBadges.join('')}
           <img src="${deal.imageUrl}" class="logo" alt="${deal.name}">
           <div class="discount">${discountText}</div>
-          <div class="description">${deal.description || ''}</div>
+          <div class="description">${truncateDescription(deal.description || '')}</div>
           <div class="price-info">
             ${details.originalPrice ? `
               <span class="original-price">${formatPrice(details.originalPrice)}</span>
@@ -448,8 +462,29 @@
         dealsCountElement.textContent = `$${Math.round(totalValue).toLocaleString()}+`;
       }
 
+      // Sort deals: status deals first, then others
+      const sortedDeals = [...deals].sort((a, b) => {
+        const aHasStatus = a.recent || a.trending || a.popular;
+        const bHasStatus = b.recent || b.trending || b.popular;
+        
+        if (aHasStatus && !bHasStatus) return -1;
+        if (!aHasStatus && bHasStatus) return 1;
+        
+        // If both have status, prioritize recent > trending > popular
+        if (aHasStatus && bHasStatus) {
+          if (a.recent && !b.recent) return -1;
+          if (!a.recent && b.recent) return 1;
+          if (a.trending && !b.trending) return -1;
+          if (!a.trending && b.trending) return 1;
+          if (a.popular && !b.popular) return -1;
+          if (!a.popular && b.popular) return 1;
+        }
+        
+        return 0;
+      });
+
       // Render the deals
-      const dealsHTML = deals.map(deal => createDealCard(deal)).join('');
+      const dealsHTML = sortedDeals.map(deal => createDealCard(deal)).join('');
       gridContainer.innerHTML = dealsHTML;
     }
 
@@ -481,6 +516,61 @@
       }
       .card .stars {
         color: #f59e0b;
+      }
+      .card .coupon-code {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .card .coupon-label {
+        font-size: 0.75rem;
+        opacity: 0.9;
+      }
+      .card .coupon-value {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+      }
+      
+      /* Status badges for deals */
+      .status-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        z-index: 10;
+      }
+      
+      .status-badge.recent {
+        background: #4CAF50;
+        color: white;
+        box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+      }
+      
+      .status-badge.trending {
+        background: #2196F3;
+        color: white;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+      }
+      
+      .status-badge.popular {
+        background: #FF9800;
+        color: white;
+        box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
       }
     `;
 

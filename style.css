@@ -432,8 +432,7 @@ h1 {
   transition: background 0.2s;
   width: 70%;
   bottom: 1.5rem;
-  position: absolute;
-
+  margin-top: auto;
 }
 
 .cta:hover {
@@ -458,6 +457,37 @@ h1 {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
+}
+
+/* Status badges for deals */
+.status-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.status-badge.recent {
+  background: #4CAF50;
+  color: white;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+.status-badge.trending {
+  background: #2196F3;
+  color: white;
+  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+}
+
+.status-badge.popular {
+  background: #FF9800;
+  color: white;
+  box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
 }
 
 /* Offer Details Page Styles */
@@ -1279,7 +1309,7 @@ h1 {
 }
 
 .is-scrolled .pricing-details {
- display: flex;
+  display: flex;
   border-radius: 12px;
   transform: translateY(0);
   pointer-events: auto;
@@ -2079,4 +2109,60 @@ h1 {
 /* Hide loading spinner when skeleton is shown */
 .skeleton-grid + .loading-state {
   display: none;
+}
+
+/* Coupon section in details page sidebar */
+.coupon-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.coupon-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+.coupon-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.coupon-code-text {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  letter-spacing: 1px;
+  flex: 1;
+}
+
+.copy-coupon-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-coupon-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.copy-coupon-btn i {
+  font-size: 1rem;
+  transition: all 0.2s ease;
 }

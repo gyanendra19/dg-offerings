@@ -50,19 +50,29 @@ export const getDealById = async (req, res) => {
 // Create new deal
 export const createDeal = async (req, res) => {
   try {
-    // Set recent to true for the new deal
-    const dealData = {
-      ...req.body,
-      recent: true
-    };
+    const { recent, trending, popular, ...otherFields } = req.body;
+    
+    // Determine which status to set based on the request
+    let statusToSet = null;
+    if (recent === true) statusToSet = 'recent';
+    else if (trending === true) statusToSet = 'trending';
+    else if (popular === true) statusToSet = 'popular';
+    else statusToSet = 'recent'; // Default to recent if none specified
 
-    // First, set recent=false for all existing recent deals
+    // Set all existing deals' status to false for the chosen status
     await Deal.updateMany(
-      { recent: true },
-      { recent: false }
+      { [statusToSet]: true },
+      { [statusToSet]: false }
     );
 
-    // Then create the new deal
+    // Create the new deal with only one status set to true
+    const dealData = {
+      ...otherFields,
+      recent: statusToSet === 'recent',
+      trending: statusToSet === 'trending',
+      popular: statusToSet === 'popular'
+    };
+
     const deal = await Deal.create(dealData);
     
     res.status(201).json({
@@ -89,25 +99,43 @@ export const updateDeal = async (req, res) => {
   try {
     const { recent, trending, popular, ...otherFields } = req.body;
 
-    // Handle status fields one by one
+    // Handle status fields - ensure mutual exclusivity
     if (recent === true) {
+      // Set all other deals' recent status to false
       await Deal.updateMany(
         { recent: true },
         { recent: false }
       );
+      // Ensure this deal has trending and popular set to false
+      await Deal.findByIdAndUpdate(
+        req.params.id,
+        { trending: false, popular: false }
+      );
     }
 
     if (trending === true) {
+      // Set all other deals' trending status to false
       await Deal.updateMany(
         { trending: true },
         { trending: false }
       );
+      // Ensure this deal has recent and popular set to false
+      await Deal.findByIdAndUpdate(
+        req.params.id,
+        { recent: false, popular: false }
+      );
     }
 
     if (popular === true) {
+      // Set all other deals' popular status to false
       await Deal.updateMany(
         { popular: true }, 
         { popular: false }
+      );
+      // Ensure this deal has recent and trending set to false
+      await Deal.findByIdAndUpdate(
+        req.params.id,
+        { recent: false, trending: false }
       );
     }
 

@@ -6,13 +6,13 @@ let isScrollListenerAdded = false;
 // Handle scroll for dynamic card
 function handleScroll() {
   scrollCallCount++;
-  
   const dynamicCard = document.querySelector('.dynamic-card');
   
   if (dynamicCard) {
     const scrollPosition = window.scrollY;
     const triggerPoint = 1500; // Adjust this value to change when the transition happens
     
+    console.log(scrollPosition, triggerPoint, dynamicCard, 'scrollCallCount');
     if (scrollPosition > triggerPoint) {
       dynamicCard.classList.add('is-scrolled');
     } else {
@@ -43,8 +43,8 @@ function initializeScrollHandler() {
                      window.location.hash.startsWith('#/details/');
   
   console.log('Initializing scroll handler. Is offer page:', isOfferPage);
-  
-  if (isOfferPage && !isScrollListenerAdded) {
+  console.log(isOfferPage, 'isoffer')
+  if (isOfferPage && !isScrollListenerAdded) {  
     // Wait for the dynamic card to be available
     const checkForDynamicCard = () => {
       const dynamicCard = document.querySelector('.dynamic-card');
@@ -52,7 +52,7 @@ function initializeScrollHandler() {
         console.log('Dynamic card found, adding scroll listener');
         window.addEventListener('scroll', handleScroll);
         isScrollListenerAdded = true;
-        handleScroll(); // Initial check
+        // handleScroll(); // Initial check
       } else {
         console.log('Dynamic card not found yet, retrying in 100ms');
         setTimeout(checkForDynamicCard, 100);
@@ -240,26 +240,13 @@ function showOfferPage(offer) {
   });
 }
 
+
+
 // Show home page
 function showHomePage() {
   const template = document.getElementById('home-template').content.cloneNode(true);
   document.querySelector('main').innerHTML = '';
   document.querySelector('main').appendChild(template);
-
-  // Fetch and render deals
-  fetchDeals().then(deals => {
-    renderDeals(deals);
-  }).catch(error => {
-    console.error('Error loading deals:', error);
-    const gridContainer = document.querySelector('.grid');
-    if (gridContainer) {
-      gridContainer.innerHTML = `
-        <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-          <p>Failed to load deals. Please try again later.</p>
-        </div>
-      `;
-    }
-  });
 }
 
 // Show 404 page
@@ -729,8 +716,8 @@ async function updatePageContent(deal) {
   const isLoggedIn = await fetch('/api/auth/me', {credentials: 'include'}).then(res => res.ok).catch(() => false);
   const dealButtonHtml = isLoggedIn ? `
     <div class="coupon-container">
-      <div class="coupon-code">FOUNDER50</div>
-      <button class="copy-btn" onclick="copyCode('FOUNDER50')">
+      <div class="coupon-code">${deal.coupon || 'FOUNDER50'}</div>
+      <button class="copy-btn" onclick="copyCode('${deal.coupon || 'FOUNDER50'}')">
         <i class='bx bx-copy'></i>
       </button>
     </div>
@@ -752,6 +739,24 @@ async function updatePageContent(deal) {
         console.error('Failed to copy:', err);
     }
   }
+
+  // Add copyCouponCode function for sidebar coupon
+  window.copyCouponCode = async function() {
+    try {
+        const couponCode = document.querySelector('.coupon-code-text').textContent;
+        await navigator.clipboard.writeText(couponCode);
+        const copyBtn = document.querySelector('.copy-coupon-btn i');
+        copyBtn.className = 'bx bx-check';
+        copyBtn.style.color = '#2ecc71';
+        
+        setTimeout(() => {
+            copyBtn.className = 'bx bx-copy';
+            copyBtn.style.color = '';
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy coupon:', err);
+    }
+  };
 
   // Add mobile fixed card
   const mobileCard = document.createElement('div');
@@ -888,6 +893,14 @@ async function updatePageContent(deal) {
   document.querySelector('.value.discounted').textContent = formatPrice(details.discountedPrice);
   document.querySelector('.value.savings').textContent = formatPrice(savings);
   
+  // Update coupon section
+  const couponSection = document.querySelector('.coupon-section');
+  const couponCodeText = document.querySelector('.coupon-code-text');
+  if (deal.coupon && couponSection && couponCodeText) {
+    couponCodeText.textContent = deal.coupon;
+    couponSection.style.display = 'block';
+  }
+  
   // Update stats
   document.querySelector('.stat-text.redeemed').textContent = `${details.numberOfPeopleRedeemed || 0} redeemed`;
   document.querySelector('.stat-text.rating').textContent = details.rating ? `${details.rating.toFixed(1)} stars` : 'No ratings yet';
@@ -1001,36 +1014,65 @@ async function updatePageContent(deal) {
       if (result.success && result.data) {
         const otherDeals = result.data.filter(d => d._id !== deal._id);
         
-        // Sort deals to put recent first
+        // Sort deals: status deals first, then others
         otherDeals.sort((a, b) => {
-          if (a.recent) return -1;
-          if (b.recent) return 1;
+          const aHasStatus = a.recent || a.trending || a.popular;
+          const bHasStatus = b.recent || b.trending || b.popular;
+          
+          if (aHasStatus && !bHasStatus) return -1;
+          if (!aHasStatus && bHasStatus) return 1;
+          
+          // If both have status, prioritize recent > trending > popular
+          if (aHasStatus && bHasStatus) {
+            if (a.recent && !b.recent) return -1;
+            if (!a.recent && b.recent) return 1;
+            if (a.trending && !b.trending) return -1;
+            if (!a.trending && b.trending) return 1;
+            if (a.popular && !b.popular) return -1;
+            if (!a.popular && b.popular) return 1;
+          }
+          
           return 0;
         });
 
         // Update alternatives section
-        const alternativesHtml = otherDeals.slice(0, 3).map(d => `
-          <div class="alternative-card ${d.recent ? 'recent' : ''}">
-            ${d.recent ? '<div class="recent-badge">Recent</div>' : ''}
-            <img src="${d.imageUrl}" class="logo" alt="${d.name}">
-            <div class="alt-name">${d.name}</div>
-            <a href="/details#${d._id}" data-link class="alt-link">View</a>
-          </div>
-        `).join('');
+        const alternativesHtml = otherDeals.slice(0, 3).map(d => {
+          const statusBadges = [];
+          if (d.recent) statusBadges.push('<span class="status-badge recent">Recent</span>');
+          if (d.trending) statusBadges.push('<span class="status-badge trending">Trending</span>');
+          if (d.popular) statusBadges.push('<span class="status-badge popular">Popular</span>');
+          
+          return `
+            <div class="alternative-card ${d.recent ? 'recent' : ''}">
+              ${statusBadges.join('')}
+              <img src="${d.imageUrl}" class="logo" alt="${d.name}">
+              <div class="alt-name">${d.name}</div>
+              <a href="/details#${d._id}" data-link class="alt-link">View</a>
+            </div>
+          `;
+        }).join('');
         document.querySelector('.alternatives-grid').innerHTML = alternativesHtml;
 
         // Update more tools section
-        const moreToolsHtml = otherDeals.slice(0, 6).map(d => `
-          <div class="card">
-            ${d.details[0]?.rating >= 4.5 ? '<span class="flame">🔥</span>' : ''}
-            ${d.details[0]?.numberOfPeopleRedeemed >= 1000 ? '<span class="flame">🔥</span>' : ''}
-            ${isNewDeal(d) ? '<span class="badge">NEW</span>' : ''}
-            <img src="${d.imageUrl}" class="logo" alt="${d.name}">
-            <div class="discount">${calculateDiscount(d.details[0])}</div>
-            <div class="description">${d.description}</div>
-            <a href="/details#${d._id}" data-link class="cta">Learn More</a>
-          </div>
-        `).join('');
+        const moreToolsHtml = otherDeals.slice(0, 6).map(d => {
+          const statusBadges = [];
+          if (d.recent) statusBadges.push('<span class="status-badge recent">Recent</span>');
+          if (d.trending) statusBadges.push('<span class="status-badge trending">Trending</span>');
+          if (d.popular) statusBadges.push('<span class="status-badge popular">Popular</span>');
+          
+          return `
+            <div class="card">
+              ${d.details[0]?.rating >= 4.5 ? '<span class="flame">🔥</span>' : ''}
+              ${d.details[0]?.numberOfPeopleRedeemed >= 1000 ? '<span class="flame">🔥</span>' : ''}
+              ${isNewDeal(d) ? '<span class="badge">NEW</span>' : ''}
+              ${statusBadges.join('')}
+              <img src="${d.imageUrl}" class="logo" alt="${d.name}">
+              <div class="discount">${calculateDiscount(d.details[0])}</div>
+              <div class="description">${d.description}</div>
+              <a href="/details#${d._id}" data-link class="cta">Learn More</a>
+            </div>
+          `;
+        }).join('');
         document.querySelector('.more-tools .grid').innerHTML = moreToolsHtml;
       }
     })

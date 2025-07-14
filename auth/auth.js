@@ -181,7 +181,7 @@ async function handleSocialAuth(provider) {
         
         // Listen for message from popup
         window.addEventListener('message', async (event) => {
-            if (event.origin === 'http://127.0.0.1:3000') {
+            if (event.origin === '') {
                 const { token, user } = event.data;
                 if (token && user) {
                     localStorage.setItem('token', token);

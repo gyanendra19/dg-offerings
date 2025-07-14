@@ -10,6 +10,11 @@ const dealSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  coupon: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   details: [{
     originalPrice: {
       type: Number,

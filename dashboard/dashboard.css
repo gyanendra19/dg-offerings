@@ -1378,6 +1378,38 @@ input[type="number"].review-rating::-webkit-inner-spin-button {
     margin-left: 8px;
 }
 
+/* Status badges for deal cards */
+.deal-card .status-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 10;
+    margin-left: 0;
+}
+
+.deal-card .status-badge.recent {
+    background: #4CAF50;
+    color: white;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+.deal-card .status-badge.trending {
+    background: #2196F3;
+    color: white;
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+}
+
+.deal-card .status-badge.popular {
+    background: #FF9800;
+    color: white;
+    box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
+}
+
 /* Loading State */
 .loading-state {
     display: flex;
@@ -1537,8 +1569,16 @@ input[type="number"].review-rating::-webkit-inner-spin-button {
 
 .status-toggles {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    align-items: center;
     margin-right: 15px;
+}
+
+.status-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 4px;
 }
 
 .status-toggle {
@@ -1553,6 +1593,10 @@ input[type="number"].review-rating::-webkit-inner-spin-button {
     transition: all 0.3s ease;
 }
 
+.status-toggles .status-toggle {
+    margin-right: 8px;
+}
+
 .status-toggle i {
     font-size: 14px;
 }
@@ -1564,21 +1608,50 @@ input[type="number"].review-rating::-webkit-inner-spin-button {
 .status-toggle[data-status="recent"].active {
     background-color: #4CAF50;
     border-color: #4CAF50;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
 }
 
 .status-toggle[data-status="trending"].active {
     background-color: #2196F3;
     border-color: #2196F3;
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
 }
 
 .status-toggle[data-status="popular"].active {
     background-color: #FF9800;
     border-color: #FF9800;
+    box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
 }
 
 .status-toggle:hover:not(.active) {
     background-color: #f5f5f5;
-} 
+}
+
+.status-toggle:disabled,
+.status-toggle[style*="pointer-events: none"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+.status-toggle:disabled::after,
+.status-toggle[style*="pointer-events: none"]::after {
+    content: "🔒";
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 12px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.status-toggle:disabled:hover,
+.status-toggle[style*="pointer-events: none"]:hover {
+    background-color: #f5f5f5;
+}
 
 /* Dashboard Grid Layout */
 .dashboard-header {
@@ -1610,6 +1683,7 @@ input[type="number"].review-rating::-webkit-inner-spin-button {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     overflow: hidden;
     cursor: pointer;
+    position: relative;
 }
 
 .deal-card:hover {
