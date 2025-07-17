@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initialize all dashboard functionality
     loadAndRenderDeals();
-    setupEventListeners();
+    // setupEventListeners();
 });
 
 // Setup all event listeners
@@ -141,19 +141,6 @@ function populateDealsSubmenu(deals) {
 
     submenu.appendChild(li);
   });
-
-  // Show the submenu after populating
-  if (deals.length > 0) {
-    submenuContainer.classList.add("active");
-    const submenuElement = submenuContainer.querySelector(".submenu");
-    if (submenuElement) {
-      submenuElement.style.maxHeight = submenuElement.scrollHeight + "px";
-    }
-    const arrow = submenuContainer.querySelector(".submenu-arrow");
-    if (arrow) {
-      arrow.style.transform = "rotate(180deg)";
-    }
-  }
 }
 
 // Add event handlers after loading deal details
@@ -317,6 +304,7 @@ async function saveSectionChanges(section, sectionData) {
         // Gather all current form data
         const dealData = {
             name: document.getElementById("dealName").value,
+            dealType: document.getElementById("dealType")?.value || "",
             description: document.getElementById("dealDescription").value,
             coupon: document.getElementById("couponCode")?.value || "",
             imageUrl:
@@ -377,6 +365,7 @@ async function saveSectionChanges(section, sectionData) {
         switch (section) {
             case "basicInfo":
                 dealData.name = sectionData.name;
+                dealData.dealType = sectionData.dealType;
                 dealData.description = sectionData.description;
                 break;
             case "details":
@@ -435,6 +424,7 @@ async function saveNewDeal() {
         const dealData = {
             _id: currentDealId,
             name: document.getElementById("dealName").value,
+            dealType: document.getElementById("dealType")?.value || "",
             description: document.getElementById("dealDescription").value,
             imageUrl: imageUrl,
             recent: false,
@@ -587,6 +577,7 @@ function setupDealEventHandlers(dealData) {
         const updatedData = {
           _id: dealData._id,
           name: form.querySelector('input[type="text"]').value,
+          dealType: document.getElementById("dealType")?.value || "",
           description: form.querySelector("textarea").value,
           coupon: document.getElementById("couponCode")?.value || "",
           imageUrl: imageUrl, // Add the image URL to the deal data
@@ -960,6 +951,10 @@ function loadNewDealForm() {
                         </div>
                     </div>
                     <div class="form-group">
+                        <label>Deal Type</label>
+                        <input type="text" id="dealType" class="form-control" placeholder="Enter deal type (e.g. SaaS, Service, Product)">
+                    </div>
+                    <div class="form-group">
                         <label>Description</label>
                         <textarea id="dealDescription" class="form-control" placeholder="Enter deal description"></textarea>
                     </div>
@@ -1287,6 +1282,7 @@ function cancelNewDeal() {
 async function saveNewDeal() {
   const dealData = {
     name: document.getElementById("dealName").value,
+    dealType: document.getElementById("dealType")?.value || "",
     description: document.getElementById("dealDescription").value,
     coupon: document.getElementById("couponCode").value,
     recent: false,
@@ -1489,6 +1485,7 @@ Make it realistic, professional, and specifically tailored to ${dealName}'s prod
       generatedContent.originalPrice.toFixed(2);
     document.getElementById("discountedPrice").value =
       generatedContent.discountedPrice.toFixed(2);
+    document.getElementById("dealType").value = generatedContent.dealType || "";
 
     // Fill detailed descriptions
     const descContainer = document.getElementById("detailedDescriptions");
@@ -1830,6 +1827,7 @@ function setupSectionSaveHandlers() {
       switch (section) {
         case "basicInfo":
           sectionData.name = document.getElementById("dealName").value;
+          sectionData.dealType = document.getElementById("dealType")?.value || "";
           sectionData.description =
             document.getElementById("dealDescription").value;
           sectionData.coupon = document.getElementById("couponCode")?.value || "";
@@ -2164,6 +2162,10 @@ async function loadDealDetails(deal) {
                             <div class="form-group">
                                 <label>Name</label>
                                 <input type="text" class="form-control" value="${dealData.name}" readonly data-original="${dealData.name}">
+                            </div>
+                            <div class="form-group">
+                                <label>Deal Type</label>
+                                <input type="text" class="form-control" id="dealType" value="${dealData.dealType || ''}" readonly data-original="${dealData.dealType || ''}" placeholder="Enter deal type (e.g. SaaS, Service, Product)">
                             </div>
                             <div class="form-group">
                                 <label>Description</label>

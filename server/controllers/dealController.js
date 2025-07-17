@@ -210,3 +210,19 @@ export const deleteDeal = async (req, res) => {
     });
   }
 }; 
+
+// Get all unique deal types
+export const getDealTypes = async (req, res) => {
+  try {
+    const types = await Deal.distinct('dealType', { dealType: { $ne: '' } });
+    res.status(200).json({
+      success: true,
+      data: types
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Server Error'
+    });
+  }
+}; 

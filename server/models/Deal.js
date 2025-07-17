@@ -15,6 +15,11 @@ const dealSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
+  dealType: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   details: [{
     originalPrice: {
       type: Number,

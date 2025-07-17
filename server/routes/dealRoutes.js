@@ -4,7 +4,8 @@ import {
   getDealById,
   createDeal,
   updateDeal,
-  deleteDeal
+  deleteDeal,
+  getDealTypes
 } from '../controllers/dealController.js';
 
 const router = express.Router();
@@ -13,6 +14,9 @@ const router = express.Router();
 router.route('/')
   .get(getAllDeals)
   .post(createDeal);
+
+router.route('/types')
+  .get(getDealTypes);
 
 router.route('/:id')
   .get(getDealById)

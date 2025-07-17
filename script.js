@@ -26,7 +26,6 @@ const savePath = () => {
   document.addEventListener('click', (e) => {
     // Check if the clicked element or its parent is an auth link
     const authLink = e.target.closest('[data-auth-type]');
-    console.log(authLink);
     if (authLink) {
       const currentPath = window.location.pathname + window.location.hash || '/';
       if (!currentPath.includes('login') && !currentPath.includes('signup')) {
@@ -71,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeScrollHandler();
   savePath();
   updateNavbar();
+  renderDealTypeFilters();
 });
 
 // Handle route changes
@@ -187,7 +187,7 @@ function showOfferPage(offer) {
         <img src="${o.logo}" class="logo" alt="${o.name}">
         <div class="discount">${o.discount}</div>
         <div class="description">${o.description}</div>
-        <a href="/details#${o.id}" data-link class="cta">Learn More</a>
+        <a href="/details#${o.id}" data-link class="cta">Get Deal</a>
       </div>
     `).join('');
 
@@ -243,10 +243,25 @@ function showOfferPage(offer) {
 
 
 // Show home page
-function showHomePage() {
-  const template = document.getElementById('home-template').content.cloneNode(true);
-  document.querySelector('main').innerHTML = '';
-  document.querySelector('main').appendChild(template);
+async function showHomePage() {
+  const main = document.querySelector('main');
+  const template = document.getElementById('home-template');
+  main.innerHTML = '';
+  main.appendChild(template.content.cloneNode(true));
+  await fetchAndRenderDeals();
+  renderDealTypeFilters();
+}
+
+async function fetchAndRenderDeals() {
+  try {
+    const res = await fetch('/api/deals');
+    const data = await res.json();
+    allDeals = data.success && Array.isArray(data.data) ? data.data : [];
+    renderDeals(allDeals);
+  } catch (e) {
+    allDeals = [];
+    renderDeals([]);
+  }
 }
 
 // Show 404 page
@@ -594,7 +609,7 @@ async function updateNavbar() {
             // Clear any stored data
             sessionStorage.removeItem('redirectAfterLogin');
             // Refresh the page
-            window.location.href = '/#signup';
+            window.location.href = '/#login';
           } else {
             console.error('Logout failed');
           }
@@ -1069,7 +1084,7 @@ async function updatePageContent(deal) {
               <img src="${d.imageUrl}" class="logo" alt="${d.name}">
               <div class="discount">${calculateDiscount(d.details[0])}</div>
               <div class="description">${d.description}</div>
-              <a href="/details#${d._id}" data-link class="cta">Learn More</a>
+              <a href="/details#${d._id}" data-link class="cta">Get Deal</a>
             </div>
           `;
         }).join('');
@@ -1217,6 +1232,8 @@ function calculateSavings(original, discounted) {
 
 // Function to render deals in the grid
 function renderDeals(deals) {
+  console.log(deals, 'deals');
+  
   const gridContainer = document.querySelector('.grid');
   if (!gridContainer) return;
 
@@ -1276,7 +1293,7 @@ function createDealCard(deal) {
       <img src="${deal.imageUrl}" class="logo" alt="${deal.name}">
       <div class="discount">${discountText}</div>
       <div class="description">${deal.description}</div>
-      <a href="/details#${deal._id}" data-link class="cta">Learn More</a>
+      <a href="/details#${deal._id}" data-link class="cta">Get Deal</a>
     </div>
   `;
 }
@@ -1305,3 +1322,60 @@ function initMobileMenu() {
 // Initialize mobile menu on page load and after route changes
 document.addEventListener('DOMContentLoaded', initMobileMenu);
 window.addEventListener('popstate', initMobileMenu); 
+
+let allDeals = [];
+let currentDealType = 'All';
+
+async function renderDealTypeFilters() {
+  const filterBar = document.querySelector('.filter-bar');
+  if (!filterBar) return;
+
+  // Fetch deal types from the backend
+  let types = [];
+  try {
+    const res = await fetch('/api/deals/types');
+    const data = await res.json();
+    if (data.success && Array.isArray(data.data)) {
+      types = data.data;
+    }
+  } catch (e) {
+    types = ['SaaS', 'Service', 'Product'];
+  }
+
+  // Render pills
+  filterBar.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-pill active';
+  allBtn.textContent = 'All';
+  filterBar.appendChild(allBtn);
+
+  allBtn.addEventListener('click', () => {
+    setActiveFilter('All');
+  });
+
+  types.forEach(type => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill';
+    btn.textContent = type;
+    btn.addEventListener('click', () => {
+      setActiveFilter(type);
+    });
+    filterBar.appendChild(btn);
+  });
+}
+
+function setActiveFilter(type) {
+  
+  currentDealType = type;
+  // Set active class
+  document.querySelectorAll('.filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === type);
+  });
+  // Filter and render
+  if (type === 'All') {
+    renderDeals(allDeals);
+  } else {
+    console.log(type, 'type');
+    renderDeals(allDeals.filter(deal => deal.dealType === type));
+  }
+} 
