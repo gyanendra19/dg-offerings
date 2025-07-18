@@ -12,7 +12,6 @@ function handleScroll() {
     const scrollPosition = window.scrollY;
     const triggerPoint = 1500; // Adjust this value to change when the transition happens
     
-    console.log(scrollPosition, triggerPoint, dynamicCard, 'scrollCallCount');
     if (scrollPosition > triggerPoint) {
       dynamicCard.classList.add('is-scrolled');
     } else {
@@ -428,8 +427,6 @@ async function showDetailsPage(offerId) {
     // Immediately hide skeleton and show content
     const skeletonState = document.querySelector('.skeleton-state');
     const contentContainer = document.querySelector('.content-container');
-    console.log(skeletonState, 'skeletonState');
-    console.log(contentContainer, 'contentContainer');
     
     if (skeletonState) {
       skeletonState.style.display = 'none';
@@ -737,23 +734,6 @@ async function updatePageContent(deal) {
       </button>
     </div>
   ` : '<a data-link data-auth-type="signup" style="text-decoration: none; text-align: center;" href="/#signup" class="cta-large">Get this deal</a>';
-
-  // Update the copyCode function to show copy animation
-  async function copyCode(code) {
-    try {
-        await navigator.clipboard.writeText(code);
-        const copyBtn = document.querySelector('.copy-btn i');
-        copyBtn.className = 'bx bx-check';
-        copyBtn.style.color = '#2ecc71';
-        
-        setTimeout(() => {
-            copyBtn.className = 'bx bx-copy';
-            copyBtn.style.color = '';
-        }, 2000);
-    } catch (err) {
-        console.error('Failed to copy:', err);
-    }
-  }
 
   // Add copyCouponCode function for sidebar coupon
   window.copyCouponCode = async function() {
