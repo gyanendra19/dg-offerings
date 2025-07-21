@@ -107,10 +107,9 @@
     <div class="offer-page">
       <div class="offer-header">
         <div style="display: flex; align-items: flex-start; flex-direction: column; margin: auto;">
-          <img style="height: 40px;" src="${offer.logo}" class="offer-logo" alt="${offer.name}">
+          <img style="height: 65px;" src="${offer.logo}" class="offer-logo" alt="${offer.name}">
           <h1>${offer.name}</h1>
         </div>
-        <div class="offer-discount">${offer.discount}</div>
         <div class="offer-subtitle">${offer.description}</div>
       </div>
 
@@ -465,7 +464,7 @@
       if (dealsCountElement) {
         const totalValue = dealsToRender.reduce((sum, deal) => {
           const savings = deal.details?.[0]?.originalPrice - deal.details?.[0]?.discountedPrice || 0;
-          return sum + savings;
+          return savings;
         }, 0);
         dealsCountElement.textContent = `$${Math.round(totalValue).toLocaleString()}+`;
       }
@@ -530,7 +529,7 @@
         justify-content: center;
         gap: 5px;
         margin-bottom: 10px;
-        color: #666;
+        color: #fff;
       }
       .card .stars {
         color: #f59e0b;

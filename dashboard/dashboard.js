@@ -301,6 +301,8 @@ async function saveSectionChanges(section, sectionData) {
             imageUrl = await handleImageUpload();
         }
 
+        console.log(document.getElementById('originalPrice').value, 'value');
+        
         // Gather all current form data
         const dealData = {
             name: document.getElementById("dealName").value,
@@ -312,12 +314,8 @@ async function saveSectionChanges(section, sectionData) {
                 document.getElementById("dealImage").getAttribute("data-original-url"),
             details: [
                 {
-                    originalPrice: parseFloat(
-                        document.getElementById("originalPrice").value
-                    ),
-                    discountedPrice: parseFloat(
-                        document.getElementById("discountedPrice").value
-                    ),
+                    originalPrice: document.getElementById("originalPrice").value,
+                    discountedPrice: document.getElementById("discountedPrice").value,
                     rating: document.querySelector(".rating")?.textContent || 0,
                     numberOfPeopleRedeemed:
                         document.querySelector(".redemptions")?.textContent || 0,
@@ -547,6 +545,11 @@ function setupDealEventHandlers(dealData) {
           input.removeAttribute("disabled");
         }
       });
+      // Enable rating input
+      const ratingInput = form.querySelector(".rating-input");
+      if (ratingInput) {
+        ratingInput.removeAttribute("readonly");
+      }
 
       // Enable status toggle buttons
       const statusToggles = document.querySelectorAll(".status-toggle");
@@ -573,7 +576,8 @@ function setupDealEventHandlers(dealData) {
       try {
         // Handle image upload first if there's a new image
         const imageUrl = await handleImageUpload();
-
+        console.log(document.querySelector('.originalPrice'), document.getElementById('originalPrice'), 'price');
+        
         const updatedData = {
           _id: dealData._id,
           name: form.querySelector('input[type="text"]').value,
@@ -586,13 +590,12 @@ function setupDealEventHandlers(dealData) {
           popular: dealData.popular || false,
           details: [
             {
-              originalPrice: parseFloat(
-                form.querySelector('input[type="number"]').value
-              ),
-              discountedPrice: parseFloat(
-                form.querySelectorAll('input[type="number"]')[1].value
-              ),
-              rating: dealData.details?.[0]?.rating || 0,
+              originalPrice: 
+                document.getElementById('originalPrice').value,
+              discountedPrice: 
+                document.getElementById('discountedPrice').value,
+              
+              rating: parseFloat(form.querySelector('.rating-input').value) || 0,
               numberOfPeopleRedeemed:
                 dealData.details?.[0]?.numberOfPeopleRedeemed || 0,
             },
@@ -2180,8 +2183,12 @@ async function loadDealDetails(deal) {
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label>Rating</label>
+                                <input type="number" min="0" max="5" step="0.1" class="form-control rating-input" value="${dealData.details?.[0]?.rating || 0}" readonly data-original="${dealData.details?.[0]?.rating || 0}">
                             </div>
                         </div>
+                    </div>
 
                         <div class="form-section">
                             <div class="form-section-header">
@@ -2191,11 +2198,11 @@ async function loadDealDetails(deal) {
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Original Price</label>
-                                        <input type="number" step="0.01" class="form-control" value="${dealData.details?.[0]?.originalPrice || 0}" readonly data-original="${dealData.details?.[0]?.originalPrice || 0}">
+                                        <input id="originalPrice" type="number" step="0.01" class="form-control" value="${dealData.details?.[0]?.originalPrice || 0}" readonly data-original="${dealData.details?.[0]?.originalPrice || 0}">
                                     </div>
                                     <div class="form-group">
                                         <label>Discounted Price</label>
-                                        <input type="number" step="0.01" class="form-control" value="${dealData.details?.[0]?.discountedPrice || 0}" readonly data-original="${dealData.details?.[0]?.discountedPrice || 0}">
+                                        <input id="discountedPrice" type="number" step="0.01" class="form-control" value="${dealData.details?.[0]?.discountedPrice || 0}" readonly data-original="${dealData.details?.[0]?.discountedPrice || 0}">
                                     </div>
                                 </div>
                                 <div class="form-row">

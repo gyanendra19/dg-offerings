@@ -40,8 +40,7 @@ function initializeScrollHandler() {
   const isOfferPage = window.location.pathname.includes('/details/') || 
                      window.location.hash.startsWith('#/details/');
   
-  console.log('Initializing scroll handler. Is offer page:', isOfferPage);
-  console.log(isOfferPage, 'isoffer')
+  console.log('Initializing scroll handler. Is offer page:', isOfferPage, window.location.pathname);
   if (isOfferPage && !isScrollListenerAdded) {  
     // Wait for the dynamic card to be available
     const checkForDynamicCard = () => {
@@ -469,7 +468,9 @@ document.addEventListener('click', async (e) => {
 // Handle browser back/forward and hash changes
 window.addEventListener('popstate', () => {
   window.scrollTo(0, 0); // Scroll to top on back/forward
-  handleRoute();
+  // Force a full reload to ensure the page loads correctly
+  window.location.reload();
+  // handleRoute();
 });
 window.addEventListener('hashchange', () => {
   window.scrollTo(0, 0); // Scroll to top on hash change
@@ -734,24 +735,8 @@ async function updatePageContent(deal) {
       </button>
     </div>
   ` : '<a data-link data-auth-type="signup" style="text-decoration: none; text-align: center;" href="/#signup" class="cta-large">Get this deal</a>';
-
-  // Add copyCouponCode function for sidebar coupon
-  window.copyCouponCode = async function() {
-    try {
-        const couponCode = document.querySelector('.coupon-code-text').textContent;
-        await navigator.clipboard.writeText(couponCode);
-        const copyBtn = document.querySelector('.copy-coupon-btn i');
-        copyBtn.className = 'bx bx-check';
-        copyBtn.style.color = '#2ecc71';
-        
-        setTimeout(() => {
-            copyBtn.className = 'bx bx-copy';
-            copyBtn.style.color = '';
-        }, 2000);
-    } catch (err) {
-        console.error('Failed to copy coupon:', err);
-    }
-  };
+  
+  initializeScrollHandler()
 
   // Add mobile fixed card
   const mobileCard = document.createElement('div');
@@ -908,6 +893,23 @@ async function updatePageContent(deal) {
   document.querySelector('.faq-list').innerHTML = renderFAQ(deal.faq || []);
   document.querySelector('.testimonials-grid').innerHTML = renderTestimonials(deal.reviews || []);
 
+  // Hide sections if content is empty
+  function hideSectionIfEmpty(selector, contentArray) {
+    const section = document.querySelector(selector);
+    if (section && (!contentArray || !Array.isArray(contentArray) || contentArray.length === 0 || contentArray.every(item => !item || Object.values(item).every(v => !v)))) {
+      section.parentElement.style.display = 'none';
+    } else if (section) {
+      section.parentElement.style.display = '';
+    }
+  }
+
+  hideSectionIfEmpty('.detailed-description', deal.detailedDescription);
+  hideSectionIfEmpty('.benefits-grid', deal.keyBenefits);
+  hideSectionIfEmpty('.features-grid', deal.whatsIncluded);
+  hideSectionIfEmpty('.eligibility-list', deal.eligibilityCriteria);
+  hideSectionIfEmpty('.faq-list', deal.faq);
+  hideSectionIfEmpty('.testimonials-grid', deal.reviews);
+
   // Update key points in sidebar
   const keyPointsList = document.querySelector('.key-points-list');
   keyPointsList.innerHTML = (deal.keyBenefits || []).slice(0, 3).map(benefit => `
@@ -924,7 +926,7 @@ async function updatePageContent(deal) {
       // Update all copy buttons on the page
       document.querySelectorAll('.copy-btn').forEach(btn => {
         const originalIcon = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i>';
+        // btn.innerHTML = '<i class="fas fa-check"></i>';
         btn.classList.add('copied');
         setTimeout(() => {
           btn.innerHTML = originalIcon;
@@ -944,6 +946,10 @@ async function updatePageContent(deal) {
         align-items: center;
         gap: 10px;
       }
+
+      .bx-copy:before{
+        content: "copy"
+      }
       .coupon-code {
         padding: 8px 16px;
         border-radius: 6px;
@@ -962,12 +968,6 @@ async function updatePageContent(deal) {
         align-items: center;
         justify-content: center;
         min-width: 36px;
-      }
-      .copy-btn:hover {
-        background: #4f46e5;
-      }
-      .copy-btn.copied {
-        background: #22c55e;
       }
       .sidebar-cta .coupon-container {
         width: 100%;
@@ -1225,7 +1225,7 @@ function renderDeals(deals) {
   if (dealsCountElement) {
     const totalValue = deals.reduce((sum, deal) => {
       const savings = deal.details?.[0]?.originalPrice - deal.details?.[0]?.discountedPrice || 0;
-      return sum + savings;
+      return savings;
     }, 0);
     dealsCountElement.textContent = `$${Math.round(totalValue).toLocaleString()}+`;
   }

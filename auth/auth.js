@@ -85,7 +85,7 @@ async function handleSignup(e) {
                 window.location.hash = 'login';
             }, 2000);
         } else {
-            errorMessage.textContent = data.message || 'Signup failed. Please try again.';
+            errorMessage.textContent = data.error || 'Signup failed. Please try again.';
             errorMessage.classList.add('show');
             successMessage.classList.remove('show');
         }
@@ -136,7 +136,7 @@ async function handleLogin(e) {
                 window.location.href = redirectUrl || '/';
             }, 1000);
         } else {
-            errorMessage.textContent = data.message || 'Login failed. Please try again.';
+            errorMessage.textContent = data.error || 'Login failed. Please try again.';
             errorMessage.classList.add('show');
             successMessage.classList.remove('show');
         }
